@@ -7,6 +7,8 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.nbt.TextComponentTagVisitor;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.*;
@@ -275,11 +277,20 @@ public class VivecraftItemRendering {
                 scale = 0.4F;
             }
             case Item, Block_Item -> {
-                rotation = Axis.ZP.rotationDegrees(180.0F);
-                rotation.mul(Axis.XP.rotationDegrees(-135.0F));
-                translateX += 0.08F;
-                translateZ += -0.08F;
-                scale = 0.4F;
+                final var itemId = itemStack.getDescriptionId();
+                if (itemId.contains("item.pointblank")) {
+                    rotation = Axis.ZP.rotationDegrees(0.0F);
+					translateX += 0.05F;
+                    translateY += 0.24F;
+					translateZ += 0.24F;
+                    scale = 0.2F; // this NEEDS to go down some more! then make pbj always aiming, and translate Y up
+                } else {
+                    rotation = Axis.ZP.rotationDegrees(180.0F);
+                    rotation.mul(Axis.XP.rotationDegrees(-135.0F));
+                    translateX += 0.08F;
+                    translateZ -= 0.08F;
+                    scale = 0.4F;
+                }
             }
             case Compass -> {
                 rotation = Axis.YP.rotationDegrees(90.0F);
