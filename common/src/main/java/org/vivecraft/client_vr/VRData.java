@@ -115,9 +115,11 @@ public class VRData {
             Matrix4f scopeMain = this.getSmoothedRotation(0, 0.2F);
             Matrix4f scopeOff = this.getSmoothedRotation(1, 0.2F);
             this.t0 = new VRDevicePose(this,
-                scopeMain,
+				// make scopes point the right way
+				mcVR.getAimRotation(0),
                 mainAimSource,
-                scopeMain.transformDirection(MathUtils.BACK, new Vector3f()));
+				mcVR.getAimRotation(0).transformDirection(MathUtils.BACK, new Vector3f())
+			);
             this.t1 = new VRDevicePose(this,
                 scopeOff,
                 offAimSource,

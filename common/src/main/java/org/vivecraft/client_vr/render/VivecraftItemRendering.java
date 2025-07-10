@@ -280,10 +280,10 @@ public class VivecraftItemRendering {
                 final var itemId = itemStack.getDescriptionId();
                 if (itemId.contains("item.pointblank")) {
                     rotation = Axis.ZP.rotationDegrees(0.0F);
-					translateX += 0.05F;
+					translateX += 0.05F; // this might need a tiny bit of adjusting
                     translateY += 0.24F;
 					translateZ += 0.24F;
-                    scale = 0.2F; // this NEEDS to go down some more! then make pbj always aiming, and translate Y up
+                    scale = 0.2F;
                 } else {
                     rotation = Axis.ZP.rotationDegrees(180.0F);
                     rotation.mul(Axis.XP.rotationDegrees(-135.0F));
