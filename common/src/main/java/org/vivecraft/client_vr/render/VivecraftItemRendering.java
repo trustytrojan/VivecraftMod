@@ -277,6 +277,7 @@ public class VivecraftItemRendering {
                 scale = 0.4F;
             }
             case Item, Block_Item -> {
+				// pointblank-1.20: crude hack for now, future API additions could help
                 final var itemId = itemStack.getDescriptionId();
                 if (itemId.contains("item.pointblank")) {
                     rotation = Axis.ZP.rotationDegrees(0.0F);

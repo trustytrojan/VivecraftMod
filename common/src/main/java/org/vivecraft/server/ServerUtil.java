@@ -1,5 +1,6 @@
 package org.vivecraft.server;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -19,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionfc;
 import org.joml.Vector3f;
 import org.vivecraft.client.utils.UpdateChecker;
+import org.vivecraft.client_vr.VRData;
 import org.vivecraft.common.network.BodyPart;
 import org.vivecraft.common.utils.MathUtils;
 import org.vivecraft.server.config.ConfigBuilder;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class ServerUtil {
 
@@ -141,6 +144,19 @@ public class ServerUtil {
         }
     }
 
+	// pointblank-1.20: function to make adding dynamic values set by commands easier
+	static LiteralArgumentBuilder<CommandSourceStack> floatArgument(String name, Consumer<Float> valueSetter) {
+		return Commands.literal(name).then(
+			Commands.argument("value", FloatArgumentType.floatArg()).executes(command -> {
+				final var value = command.getArgument("value", Float.class);
+				valueSetter.accept(value);
+				final var msg = "Set " + name + " to " + value;
+				command.getSource().getPlayerOrException().sendSystemMessage(Component.literal(msg));
+				return Command.SINGLE_SUCCESS;
+			})
+		);
+	}
+
     /**
      * registers Vivecraft server commands, to change config settings with commands
      *
@@ -149,6 +165,13 @@ public class ServerUtil {
     public static void registerCommands(
         CommandDispatcher<net.minecraft.commands.CommandSourceStack> dispatcher, CommandBuildContext buildContext)
     {
+		// pointblank-1.20: simple command to set VRData static values
+		dispatcher.register(
+			Commands.literal("vc")
+				.then(floatArgument("yTranslation", v -> VRData.yTranslation = v))
+				.then(floatArgument("xRotation", v -> VRData.xRotation = v))
+		);
+
         // reload command
         dispatcher.register(Commands.literal("vivecraft-server-config")
             .requires(source -> source.hasPermission(4))

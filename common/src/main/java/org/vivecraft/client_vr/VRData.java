@@ -12,10 +12,15 @@ import org.vivecraft.client_vr.settings.VRSettings;
 import org.vivecraft.common.network.FBTMode;
 import org.vivecraft.common.utils.MathUtils;
 
+import com.mojang.math.Axis;
+
 import javax.annotation.Nullable;
 import java.lang.Math;
 
 public class VRData {
+	// pointblank-1.20: found some really good values, they are set here as the default now!
+	public static float yTranslation = .5f, xRotation = -3.25f;
+
     // headset center
     public VRDevicePose hmd;
     // left eye
@@ -112,13 +117,15 @@ public class VRData {
             this.t0 = this.eye0;
             this.t1 = this.eye1;
         } else {
-            Matrix4f scopeMain = this.getSmoothedRotation(0, 0.2F);
+            // Matrix4f scopeMain = this.getSmoothedRotation(0, 0.2F);
             Matrix4f scopeOff = this.getSmoothedRotation(1, 0.2F);
             this.t0 = new VRDevicePose(this,
-				// make scopes point the right way
-				mcVR.getAimRotation(0),
-                mainAimSource,
-				mcVR.getAimRotation(0).transformDirection(MathUtils.BACK, new Vector3f())
+				// pointblank-1.20: scopeMain is 90 degrees down from the controller, let's use mcVR directly
+				// we're trying to use guns here not telescopes
+				// TODO: obviously we want the spyglass to still work, make this dynamic somehow
+				mcVR.getAimRotation(0).rotate(Axis.XP.rotationDegrees(xRotation), new Matrix4f()),
+                mainAimSource.add(0f, yTranslation, 0f, new Vector3f()),
+				mcVR.getAimVector(0).rotate(Axis.XP.rotationDegrees(xRotation))
 			);
             this.t1 = new VRDevicePose(this,
                 scopeOff,

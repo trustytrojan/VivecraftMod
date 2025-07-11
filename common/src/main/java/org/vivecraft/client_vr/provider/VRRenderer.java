@@ -351,7 +351,7 @@ public abstract class VRRenderer {
             if (
 				(TelescopeTracker.isTelescope(minecraft.player.getMainHandItem())
 				&& TelescopeTracker.isViewing(0))
-				// extremely jank, maybe check if there's a scope first
+				// pointblank-1.20: extremely jank, maybe check if there's a scope first
 				|| minecraft.player.getMainHandItem().getDescriptionId().startsWith("item.pointblank")
 			) {
                 passes.add(RenderPass.SCOPER);
