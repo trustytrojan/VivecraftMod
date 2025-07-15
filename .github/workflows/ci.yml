@@ -1,4 +1,4 @@
-name: Build project
+name: Build for Forge
 
 on: [push, pull_request]
 
@@ -17,7 +17,7 @@ jobs:
           java-version: '17'
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew forge:build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
