@@ -40,6 +40,10 @@ public class TelescopeTracker extends Tracker {
         return this.viewing[0] || this.viewing[1];
     }
 
+	public boolean itemInUse(int controller) {
+		return this.viewing[controller];
+	}
+
     @Override
     public void reset(LocalPlayer player) {
         this.viewing[0] = false;
