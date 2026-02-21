@@ -14,7 +14,7 @@ libs/
 .idea/
 classes/
 .metadata
-.vscode
 .settings
 *.launch
 .architectury-transformer/
+*.sh
