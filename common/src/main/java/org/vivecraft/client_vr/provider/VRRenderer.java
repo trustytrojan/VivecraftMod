@@ -351,17 +351,18 @@ public abstract class VRRenderer {
         }
 
         if (minecraft.player != null) {
-            // previously these were calling TelescopeTracker.isViewing(int) but this is unnecessary
-            // because VRPlayer already calls Tracker.doProcess() and TelescopeTracker's impl already
-            // does the isViewing() work, which means it's `int viewing[2]` has already been set for this tick.
-            if (dataholder.telescopeTracker.itemInUse(0))
+            // pointblank-1.20: previously these were calling TelescopeTracker.isViewing(int) but this is unnecessary
+            // because VRPlayer calls Tracker.doProcess() and TelescopeTracker's impl does the isViewing() work,
+            // which means its `int viewing[2]` has already been set for this tick.
+            final var isHoldingGun = minecraft.player.getMainHandItem().getDescriptionId().contains("pointblank");
+            if (dataholder.telescopeTracker.itemInUse(0) || isHoldingGun)
                 passes.add(RenderPass.SCOPER);
             if (dataholder.telescopeTracker.itemInUse(1))
                 passes.add(RenderPass.SCOPEL);
-            }
+        }
 
-            if (dataholder.cameraTracker.isVisible() || dataholder.vrSettings.renderAllPasses) {
-                passes.add(RenderPass.CAMERA);
+        if (dataholder.cameraTracker.isVisible() || dataholder.vrSettings.renderAllPasses) {
+            passes.add(RenderPass.CAMERA);
         }
 
         return passes;

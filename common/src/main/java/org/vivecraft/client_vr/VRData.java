@@ -146,12 +146,12 @@ public class VRData {
             this.t0 = this.eye0;
             this.t1 = this.eye1;
         } else {
+            // pointblank-1.20: scopeMain is 90 degrees down from the controller, let's use mcVR directly
             // Matrix4f scopeMain = this.getSmoothedRotation(0, 0.2F);
             Matrix4f scopeOff = this.getSmoothedRotation(1, 0.2F);
             this.t0 = new VRDevicePose(this,
-				// pointblank-1.20: scopeMain is 90 degrees down from the controller, let's use mcVR directly
-				// we're trying to use guns here not telescopes
-				// TODO: obviously we want the spyglass to still work, make this dynamic somehow
+				// pointblank-1.20: we're trying to use guns here not telescopes
+				// pointblank-1.20: TODO: obviously we want the spyglass to still work, make this dynamic somehow
 				mcVR.getAimRotation(0).rotate(Axis.XP.rotationDegrees(xRotation), new Matrix4f()),
                 mainAimSource.add(0f, yTranslation, 0f, new Vector3f()),
 				mcVR.getAimVector(0).rotate(Axis.XP.rotationDegrees(xRotation))
