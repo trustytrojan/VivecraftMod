@@ -249,8 +249,7 @@ public class VivecraftItemRendering {
             }
             case ITEM, BLOCK_ITEM -> {
 				// pointblank-1.20: crude hack for now, future API additions could help
-                final var itemId = itemStack.getDescriptionId();
-                if (itemId.contains("item.pointblank")) {
+                if (itemStack.getDescriptionId().contains("pointblank")) {
                     rotation = Axis.ZP.rotationDegrees(0.0F);
 					translateX += 0.05F; // this might need a tiny bit of adjusting
                     translateY += 0.24F;

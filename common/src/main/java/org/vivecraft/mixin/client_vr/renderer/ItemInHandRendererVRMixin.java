@@ -148,7 +148,8 @@ public abstract class ItemInHandRendererVRMixin {
         if (!itemStack.isEmpty()) {
             poseStack.pushPose();
 
-            if (player.swingingArm == hand) {
+            // pointblank-1.20: prevent hand swing animation when holding gun
+            if (player.swingingArm == hand && !itemStack.getDescriptionId().contains("pointblank")) {
                 this.vivecraft$transformFirstPersonVR(poseStack, side, swingProgress);
             }
 
