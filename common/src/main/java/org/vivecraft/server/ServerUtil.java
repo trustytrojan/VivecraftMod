@@ -22,7 +22,6 @@ import org.joml.Vector3f;
 import org.vivecraft.api.data.VRBodyPart;
 import org.vivecraft.client.utils.UpdateChecker;
 import org.vivecraft.client_vr.VRData;
-import org.vivecraft.common.network.BodyPart;
 import org.vivecraft.common.utils.MathUtils;
 import org.vivecraft.server.config.ConfigBuilder;
 import org.vivecraft.server.config.ServerConfig;
