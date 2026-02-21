@@ -30,7 +30,7 @@ import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
-import org.vivecraft.client.Xplat;
+import org.vivecraft.Xplat;
 import org.vivecraft.client_vr.settings.VRSettings;
 
 import java.io.*;
@@ -447,7 +447,7 @@ public class MenuWorldExporter {
             for (int i = 0; i < size; i++) {
                 Biome.BiomeBuilder builder = new Biome.BiomeBuilder();
 
-                dis.readUTF(); // registry key, not actually used though, just for reference
+                String biomeId = dis.readUTF(); // registry key, not actually used though, just for reference
 
                 builder.hasPrecipitation(dis.readBoolean());
                 builder.temperature(dis.readFloat());

@@ -33,7 +33,7 @@ public class RadialHandler {
     private static boolean LAST_PRESSED_SHIFT_R;
 
     public static boolean setOverlayShowing(boolean showingState, ControllerType controller) {
-        if (ClientDataHolderVR.KIOSK) {
+        if (DH.kiosk) {
             return false;
         } else {
             if (DH.vrSettings.seated) {
@@ -43,7 +43,7 @@ public class RadialHandler {
             if (showingState) {
                 UI.init(Minecraft.getInstance(), GuiHandler.SCALED_WIDTH_MAX, GuiHandler.SCALED_HEIGHT_MAX);
                 SHOWING = true;
-                ACTIVE_CONTROLLER = controller;
+                ACTIVE_CONTROLLER = controller != null ? controller : ControllerType.RIGHT;
                 orientOverlay(ACTIVE_CONTROLLER);
             } else {
                 SHOWING = false;

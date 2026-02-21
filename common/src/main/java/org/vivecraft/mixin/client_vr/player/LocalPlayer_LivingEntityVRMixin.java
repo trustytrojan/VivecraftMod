@@ -1,7 +1,7 @@
 package org.vivecraft.mixin.client_vr.player;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,8 +14,6 @@ public abstract class LocalPlayer_LivingEntityVRMixin extends LocalPlayer_Entity
     public float zza;
     @Shadow
     protected int useItemRemaining;
-    @Shadow
-    protected ItemStack useItem;
 
     @Shadow
     public abstract boolean isFallFlying();
@@ -28,4 +26,9 @@ public abstract class LocalPlayer_LivingEntityVRMixin extends LocalPlayer_Entity
      */
     @Inject(method = "releaseUsingItem", at = @At("HEAD"))
     protected void vivecraft$beforeReleaseUsingItem(CallbackInfo ci) {}
+
+    @ModifyExpressionValue(method = "handleRelativeFrictionAndCalculateMovement", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;horizontalCollision:Z"))
+    protected boolean vivecraft$disableVanillaClimbing(boolean original) {
+        return original;
+    }
 }

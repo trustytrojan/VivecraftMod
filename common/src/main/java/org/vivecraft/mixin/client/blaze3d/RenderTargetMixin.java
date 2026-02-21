@@ -3,14 +3,16 @@ package org.vivecraft.mixin.client.blaze3d;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.vivecraft.client.extensions.RenderTargetExtension;
 import org.vivecraft.client_vr.ClientDataHolderVR;
 import org.vivecraft.client_vr.settings.VRSettings;
@@ -92,13 +94,13 @@ public abstract class RenderTargetMixin implements RenderTargetExtension {
 
     @ModifyArg(method = "createBuffers", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;setFilterMode(I)V"))
     private int vivecraft$linearFiltering(int filterMode) {
-        return this.vivecraft$linearFilter ? GL11.GL_LINEAR : filterMode;
+        return this.vivecraft$linearFilter ? GL30.GL_LINEAR : filterMode;
     }
 
     @ModifyArg(method = "setFilterMode", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;_texParameter(III)V", remap = false, ordinal = 0), index = 2)
     private int vivecraft$modifyTextureMinFilter(int attachment) {
         if (this.vivecraft$mipmaps) {
-            return attachment == GL11.GL_LINEAR ? GL11.GL_LINEAR_MIPMAP_LINEAR : GL11.GL_NEAREST_MIPMAP_NEAREST;
+            return attachment == GL30.GL_LINEAR ? GL30.GL_LINEAR_MIPMAP_LINEAR : GL30.GL_NEAREST_MIPMAP_NEAREST;
         } else {
             return attachment;
         }
@@ -132,6 +134,15 @@ public abstract class RenderTargetMixin implements RenderTargetExtension {
             return false;
         } else {
             return changeViewport;
+        }
+    }
+
+    @Inject(method = "_blitToScreen", at = @At("TAIL"))
+    private void vivecraft$resetViewport(CallbackInfo ci) {
+        if (RenderPassType.isWorldOnly()) {
+            // some mods do a blit mit renderpass, and mess up the viewport
+            RenderSystem.viewport(0, 0, Minecraft.getInstance().getMainRenderTarget().width,
+                Minecraft.getInstance().getMainRenderTarget().height);
         }
     }
 }
